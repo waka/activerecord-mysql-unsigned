@@ -1,11 +1,11 @@
-# Activerecord::Mysql::Unsigned
+# Activerecord::Mysql::Unsigned [![Build Status](https://travis-ci.org/waka/activerecord-mysql-unsigned.png?branch=master)](https://travis-ci.org/waka/activerecord-mysql-unsigned)
 
 Add unsigned option to integer type for ActiveRecord's MySQL2 adapter.
 
 ## Support version
 
 ```
-ActiveRecord::VERSION >= 3
+ActiveRecord::VERSION >= 3.2 # include v4.0!
 ```
 
 ## Installation

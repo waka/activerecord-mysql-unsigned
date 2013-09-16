@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = ActiveRecord::Mysql::Unsigned::VERSION
   spec.authors       = ["yo_waka"]
   spec.email         = ["y.wakahara@gmail.com"]
-  spec.description   = %q{Enabled to specify unsigned type to integer type for MySQL}
-  spec.summary       = %q{Enabled to specify unsigned type to integer type for MySQL}
+  spec.description   = %q{Add unsigned option to integer type for ActiveRecord's MySQL2 adapter}
+  spec.summary       = %q{Add unsigned option to integer type for ActiveRecord's MySQL2 adapter}
   spec.homepage      = "https://github.com/waka/activerecord-mysql-unsigned"
   spec.license       = "MIT"
 
@@ -24,6 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "database_cleaner"
   spec.add_runtime_dependency "activesupport", ">= 3.0.0"
   spec.add_runtime_dependency "activerecord", ">= 3.0.0"
-  #spec.add_runtime_dependency "activerecord", "~> 3"
   spec.add_runtime_dependency "mysql2"
 end
