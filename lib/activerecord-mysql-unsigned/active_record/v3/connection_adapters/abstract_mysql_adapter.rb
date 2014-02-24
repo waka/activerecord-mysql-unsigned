@@ -26,7 +26,7 @@ module ActiveRecord
               'int(10)'
             end
           when 5..8
-            'bigint' + (unsigned ? ' unsigned' : '')
+            'bigint' + (unsigned ? ' unsigned' : '') + (auto_increment ? ' AUTO_INCREMENT' : '')
           else raise(ActiveRecordError, "No integer type has byte size #{limit}")
           end
         when 'text'

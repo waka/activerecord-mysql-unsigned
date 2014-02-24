@@ -31,16 +31,25 @@ class CreateUsersTable < ActiveRecord::Migration
       t.integer :unsigned_int, unsigned: true
       t.integer :will_unsigned_int, unsigned: false
       t.integer :will_signed_int, unsigned: true
+      t.integer :will_bigint
     end
   end
 end
 CreateUsersTable.change
 
+class ChangePrimaryKeyToGoodsTable < ActiveRecord::Migration
+  def self.change
+    change_column :goods, :id, :integer, limit: 8, unsigned: true, null: false, auto_increment: true
+  end
+end
+ChangePrimaryKeyToGoodsTable.change
+
 class ChangeColumnToUsersTable < ActiveRecord::Migration
   def self.change
-    change_column :users, :id,                :integer, unsigned: true, null: false, auto_increment: true
+    change_column :users, :id,                :integer, limit: 8, unsigned: true, null: false, auto_increment: true
     change_column :users, :will_unsigned_int, :integer, unsigned: true
     change_column :users, :will_signed_int,   :integer, unsigned: false
+    change_column :users, :will_bigint,       :integer, limit: 8
   end
 end
 ChangeColumnToUsersTable.change
