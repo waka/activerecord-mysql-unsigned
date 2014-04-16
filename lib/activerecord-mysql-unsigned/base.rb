@@ -1,6 +1,7 @@
 if ActiveRecord::VERSION::MAJOR == 4
   require 'activerecord-mysql-unsigned/active_record/v4/connection_adapters/abstract/schema_definitions'
   require 'activerecord-mysql-unsigned/active_record/v4/connection_adapters/abstract/schema_statements'
+  require 'activerecord-mysql-unsigned/active_record/v4/connection_adapters/abstract/schema_dumper'
   require 'activerecord-mysql-unsigned/active_record/v4/connection_adapters/abstract_adapter'
   require 'activerecord-mysql-unsigned/active_record/v4/connection_adapters/abstract_mysql_adapter'
   require 'activerecord-mysql-unsigned/active_record/v4/connection_adapters/mysql2_adapter'
