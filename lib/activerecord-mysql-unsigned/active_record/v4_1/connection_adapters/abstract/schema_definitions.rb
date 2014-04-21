@@ -32,8 +32,6 @@ module ActiveRecord
         column.first       = options[:first]
         column.after       = options[:after]
         column.primary_key = type == :primary_key || options[:primary_key]
-        p options
-        p column.inspect
         column
       end
 

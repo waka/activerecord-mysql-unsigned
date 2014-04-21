@@ -4,6 +4,35 @@ module ActiveRecord
   module ConnectionAdapters
     class AbstractMysqlAdapter < AbstractAdapter
  
+      class SchemaCreation < AbstractAdapter::SchemaCreation
+
+        def visit_AddColumn(o)
+          sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
+          sql = "ADD #{quote_column_name(o.name)} #{sql_type}"
+          add_column_options!(sql, column_options(o))
+        end
+
+        def visit_ChangeColumnDefinition(o)
+          column = o.column
+          options = o.options
+          sql_type = type_to_sql(o.type, options[:limit], options[:precision], options[:scale], options[:unsigned])
+          change_column_sql = "CHANGE #{quote_column_name(column.name)} #{quote_column_name(options[:name])} #{sql_type}"
+          add_column_options!(change_column_sql, options)
+          add_column_position!(change_column_sql, options)
+        end
+
+        def visit_ColumnDefinition(o)
+          sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
+          column_sql = "#{quote_column_name(o.name)} #{sql_type}"
+          add_column_options!(column_sql, column_options(o)) unless o.primary_key?
+          column_sql
+        end
+
+        def type_to_sql(type, limit, precision, scale, unsigned)
+          @conn.type_to_sql type.to_sym, limit, precision, scale, unsigned
+        end
+      end
+
       NATIVE_DATABASE_TYPES.merge!(
         :primary_key => "int(10) unsigned DEFAULT NULL auto_increment PRIMARY KEY"
       )
