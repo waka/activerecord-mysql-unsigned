@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "database_cleaner"
-  spec.add_runtime_dependency "activesupport", ">= 3.2", "<= 4.1"
-  spec.add_runtime_dependency "activerecord", ">= 3.2", "<= 4.1"
+  spec.add_runtime_dependency "activesupport", ">= 3.2", "< 4.2"
+  spec.add_runtime_dependency "activerecord", ">= 3.2", "< 4.2"
   spec.add_runtime_dependency "mysql2"
 end
