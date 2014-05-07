@@ -5,7 +5,7 @@ Add unsigned option to integer type for ActiveRecord's MySQL2 adapter.
 ## Support version
 
 ```
-ActiveRecord::VERSION >= 3.2 # include v4.0, and v4.1!
+4.2 > ActiveRecord::VERSION >= 3.2
 ```
 
 ## Installation
