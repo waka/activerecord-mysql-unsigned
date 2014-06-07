@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe "INT column" do
+
+  before :all do
+    ChangePrimaryKeyToGoodsTable.change
+    ChangeColumnToUsersTable.change
+    AddColumnToUsersTable.change
+  end
+
   before(:each) do
     @user = User.new(name: "bob")
   end
@@ -37,9 +44,10 @@ describe "INT column" do
     end
   end
 
-  it "unsigned column has 'unsigned' field" do
+  it "unsigned column has 'unsigned' attribute" do
     signed_int_col = User.columns[2]
     expect(signed_int_col.unsigned).to be_false
+
     unsigned_int_col = User.columns[3]
     expect(unsigned_int_col.unsigned).to be_true
   end

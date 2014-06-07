@@ -9,7 +9,10 @@ module ActiveRecord
         def visit_AddColumn(o)
           sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
           sql = "ADD #{quote_column_name(o.name)} #{sql_type}"
-          add_column_options!(sql, column_options(o))
+          add_column_position!(
+            add_column_options!(sql, column_options(o)),
+            column_options(o)
+          )
         end
 
         def visit_ChangeColumnDefinition(o)
