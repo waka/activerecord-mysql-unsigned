@@ -20,7 +20,7 @@ module ActiveRecord
           options = o.options
           sql_type = type_to_sql(o.type, options[:limit], options[:precision], options[:scale], options[:unsigned])
           change_column_sql = "CHANGE #{quote_column_name(column.name)} #{quote_column_name(options[:name])} #{sql_type}"
-          add_column_options!(change_column_sql, options)
+          add_column_options!(change_column_sql, options.merge(column: column))
           add_column_position!(change_column_sql, options)
         end
 
@@ -31,8 +31,12 @@ module ActiveRecord
           column_sql
         end
 
-        def type_to_sql(type, limit, precision, scale, unsigned)
-          @conn.type_to_sql type.to_sym, limit, precision, scale, unsigned
+        def type_to_sql(type, limit, precision, scale, unsigned = nil)
+          if unsigned.present?
+            @conn.type_to_sql type.to_sym, limit, precision, scale, unsigned
+          else
+            @conn.type_to_sql type.to_sym, limit, precision, scale
+          end
         end
       end
 
