@@ -1,4 +1,4 @@
-# Activerecord::Mysql::Unsigned [![Build Status](https://travis-ci.org/waka/activerecord-mysql-unsigned.png?branch=master)](https://travis-ci.org/waka/activerecord-mysql-unsigned)
+# Activerecord::Mysql::Unsigned [![Build Status](https://travis-ci.org/waka/activerecord-mysql-unsigned.png?branch=master)](https://travis-ci.org/waka/activerecord-mysql-unsigned) [![Gem Version](https://badge.fury.io/rb/activerecord-mysql-unsigned.svg)](http://badge.fury.io/rb/activerecord-mysql-unsigned)
 
 Add unsigned option to integer type for ActiveRecord's MySQL2 adapter.
 
