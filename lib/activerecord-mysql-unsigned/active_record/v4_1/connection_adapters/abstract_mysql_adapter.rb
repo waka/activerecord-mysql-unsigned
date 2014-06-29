@@ -1,11 +1,12 @@
+require 'forwardable'
 require 'active_record/connection_adapters/abstract_mysql_adapter'
 
 module ActiveRecord
   module ConnectionAdapters
     class AbstractMysqlAdapter < AbstractAdapter
- 
-      class SchemaCreation < AbstractAdapter::SchemaCreation
 
+      class SchemaCreation < AbstractAdapter::SchemaCreation
+        extend Forwardable
         def visit_AddColumn(o)
           sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
           sql = "ADD #{quote_column_name(o.name)} #{sql_type}"
@@ -20,7 +21,7 @@ module ActiveRecord
           options = o.options
           sql_type = type_to_sql(o.type, options[:limit], options[:precision], options[:scale], options[:unsigned])
           change_column_sql = "CHANGE #{quote_column_name(column.name)} #{quote_column_name(options[:name])} #{sql_type}"
-          add_column_options!(change_column_sql, options)
+          add_column_options!(change_column_sql, options.merge(column: column))
           add_column_position!(change_column_sql, options)
         end
 
@@ -31,9 +32,7 @@ module ActiveRecord
           column_sql
         end
 
-        def type_to_sql(type, limit, precision, scale, unsigned)
-          @conn.type_to_sql type.to_sym, limit, precision, scale, unsigned
-        end
+        def_delegator :@conn, :type_to_sql, :type_to_sql
       end
 
       NATIVE_DATABASE_TYPES.merge!(
