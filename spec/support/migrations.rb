@@ -36,6 +36,8 @@ class CreateUsersTable < ActiveRecord::Migration
       t.integer :will_unsigned_int, unsigned: false
       t.integer :will_signed_int, unsigned: true
       t.integer :will_bigint
+      t.decimal :signed_decimal, null: false, default: 0, precision: 15, scale: 2
+      t.decimal :unsigned_decimal, null: false, default: 0, unsigned: true, precision: 15, scale: 2
     end
   end
 end
