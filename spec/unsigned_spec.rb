@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "INT column" do
+describe "INT/Decimal column" do
 
   before :all do
     ChangePrimaryKeyToGoodsTable.change
@@ -50,5 +50,28 @@ describe "INT column" do
 
     unsigned_int_col = User.columns[3]
     expect(unsigned_int_col.unsigned).to be_truthy
+  end
+
+  it "allowed minus value of signed decimal" do
+    @user.signed_decimal = -10.0
+    @user.save
+    expect(@user.signed_decimal).to eq(-10.0)
+  end
+
+  it "not allowed minus value of unsigned decimal" do
+    @user.unsigned_decimal = -10
+
+    if ActiveRecord::VERSION::MAJOR == 4
+      begin
+        @user.save
+        expect(true).to be_falsey # should not be reached here
+      rescue => e
+        expect(e).to be_an_instance_of ActiveRecord::StatementInvalid
+      end
+    else
+      @user.save
+      @user.reload
+      expect(@user.unsigned_int).to be 0 # saved 0
+    end
   end
 end

@@ -41,7 +41,28 @@ module ActiveRecord
 
       # Maps logical Rails types to MySQL-specific data types.
       def type_to_sql(type, limit = nil, precision = nil, scale = nil, unsigned = false)
+        # return earlier, only need overwrite method when unsigned option == true
+        return super unless unsigned
+
+
         case type.to_s
+        when 'decimal'
+          # copy from rails core
+          # https://github.com/rails/rails/blob/600aaf4234c80064201ee34ddabed216b91559db/activerecord/lib/active_record/connection_adapters/abstract/schema_statements.rb
+          native = native_database_types[type.to_sym]
+          column_type_sql = (native.is_a?(Hash) ? native[:name] : native).dup
+
+          scale ||= native[:scale]
+
+          if precision ||= native[:precision]
+            if scale
+              column_type_sql << "(#{precision},#{scale}) unsigned"
+            else
+              column_type_sql << "(#{precision}) unsigned"
+            end
+          elsif scale
+            raise ArgumentError, "Error adding decimal column: precision cannot be empty if scale is specified"
+          end
         when 'binary'
           case limit
           when 0..0xfff;           "varbinary(#{limit})"
@@ -66,14 +87,6 @@ module ActiveRecord
           when 5..8
             'bigint' + (unsigned ? ' unsigned' : '')
           else raise(ActiveRecordError, "No integer type has byte size #{limit}")
-          end
-        when 'text'
-          case limit
-          when 0..0xff;               'tinytext'
-          when nil, 0x100..0xffff;    'text'
-          when 0x10000..0xffffff;     'mediumtext'
-          when 0x1000000..0xffffffff; 'longtext'
-          else raise(ActiveRecordError, "No text type has character length #{limit}")
           end
         else
           super
