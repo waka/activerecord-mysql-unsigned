@@ -5,7 +5,7 @@ module ActiveRecord
     class AbstractMysqlAdapter < AbstractAdapter
 
       NATIVE_DATABASE_TYPES.merge!(
-        primary_key: "int(10) unsigned DEFAULT NULL auto_increment PRIMARY KEY"
+        :primary_key => "int(10) unsigned DEFAULT NULL auto_increment PRIMARY KEY"
       )
  
       # Maps logical Rails types to MySQL-specific data types.
