@@ -40,7 +40,7 @@ module ActiveRecord
       )
 
       # Maps logical Rails types to MySQL-specific data types.
-      def type_to_sql(type, limit = nil, precision = nil, scale = nil, unsigned = false)
+      def type_to_sql_with_unsigned(type, limit = nil, precision = nil, scale = nil, unsigned = false)
         # return earlier, only need overwrite method when unsigned option == true
         return type_to_sql_without_unsigned(type, limit, precision, scale) unless unsigned
 
