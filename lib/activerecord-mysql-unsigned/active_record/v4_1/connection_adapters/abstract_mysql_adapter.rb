@@ -92,6 +92,7 @@ module ActiveRecord
           type_to_sql_without_unsigned(type, limit, precision, scale)
         end
       end
+      alias_method_chain :type_to_sql, :unsigned
 
     end
   end
