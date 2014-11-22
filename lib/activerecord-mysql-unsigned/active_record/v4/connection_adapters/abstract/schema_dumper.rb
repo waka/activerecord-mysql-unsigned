@@ -21,7 +21,7 @@ module ActiveRecord
         spec[:precision] = column.precision.inspect if column.precision
         spec[:scale]     = column.scale.inspect if column.scale
         spec[:null]      = 'false' unless column.null
-        spec[:unsigned]  = 'true' if column.unsigned
+        spec[:unsigned]  = 'true' if column.unsigned?
         spec[:default]   = default_string(column.default) if column.has_default?
         spec
       end

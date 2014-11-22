@@ -4,6 +4,12 @@ module ActiveRecord
   module ConnectionAdapters
     class AbstractMysqlAdapter < AbstractAdapter
 
+      class Column < ConnectionAdapters::Column # :nodoc:
+        def unsigned?
+          sql_type =~ /unsigned/i
+        end
+      end
+
       NATIVE_DATABASE_TYPES.merge!(
         primary_key: "int(10) unsigned DEFAULT NULL auto_increment PRIMARY KEY"
       )

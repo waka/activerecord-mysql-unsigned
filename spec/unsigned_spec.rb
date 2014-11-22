@@ -46,10 +46,10 @@ describe "INT/Decimal column" do
 
   it "unsigned column has 'unsigned' attribute" do
     signed_int_col = User.columns[2]
-    expect(signed_int_col.unsigned).to be_falsey
+    expect(signed_int_col.unsigned?).to be_falsey
 
     unsigned_int_col = User.columns[3]
-    expect(unsigned_int_col.unsigned).to be_truthy
+    expect(unsigned_int_col.unsigned?).to be_truthy
   end
 
   it "allowed minus value of signed decimal" do
