@@ -30,7 +30,7 @@ describe "INT/Decimal column" do
   it "not allowed minus value of unsigned int" do
     @user.unsigned_int = -2147483648
 
-    if ActiveRecord::VERSION::MAJOR == 4
+    if strict_mode?
       begin
         @user.save
         expect(true).to be_falsey # should not be reached here
@@ -61,7 +61,7 @@ describe "INT/Decimal column" do
   it "not allowed minus value of unsigned decimal" do
     @user.unsigned_decimal = -10
 
-    if ActiveRecord::VERSION::MAJOR == 4
+    if strict_mode?
       begin
         @user.save
         expect(true).to be_falsey # should not be reached here
@@ -71,7 +71,13 @@ describe "INT/Decimal column" do
     else
       @user.save
       @user.reload
-      expect(@user.unsigned_int).to be 0 # saved 0
+      expect(@user.unsigned_decimal).to eq BigDecimal("0.00") # saved 0.00
     end
+  end
+
+  private
+
+  def strict_mode?
+    /STRICT_(?:TRANS|ALL)_TABLES/ =~ ActiveRecord::Base.connection.select_value("SELECT @@SESSION.sql_mode")
   end
 end
