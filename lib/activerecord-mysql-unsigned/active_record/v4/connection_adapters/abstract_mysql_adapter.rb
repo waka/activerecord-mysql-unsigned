@@ -10,9 +10,11 @@ module ActiveRecord
       class SchemaCreation < AbstractAdapter::SchemaCreation
         def visit_AddColumn(o)
           sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
-          sql = "ADD #{quote_column_name(o.name)} #{sql_type}"
-          add_column_options!(sql, column_options(o)) unless o.type.to_sym == :primary_key
-          add_column_position!(sql, column_options(o))
+          add_column_sql = "ADD #{quote_column_name(o.name)} #{sql_type}"
+          add_column_options!(add_column_sql, column_options(o)) unless o.type.to_sym == :primary_key
+          add_column_position!(add_column_sql, column_options(o))
+
+          add_column_sql
         end
 
         def visit_ChangeColumnDefinition(o)
@@ -22,12 +24,15 @@ module ActiveRecord
           change_column_sql = "CHANGE #{quote_column_name(column.name)} #{quote_column_name(options[:name])} #{sql_type}"
           add_column_options!(change_column_sql, options.merge(column: column)) unless o.type.to_sym == :primary_key
           add_column_position!(change_column_sql, options)
+
+          change_column_sql
         end
 
         def visit_ColumnDefinition(o)
           sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
           column_sql = "#{quote_column_name(o.name)} #{sql_type}"
           add_column_options!(column_sql, column_options(o)) unless o.type.to_sym == :primary_key
+
           column_sql
         end
 
