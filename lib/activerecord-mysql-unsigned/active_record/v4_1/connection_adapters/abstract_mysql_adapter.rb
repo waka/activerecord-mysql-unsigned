@@ -40,9 +40,9 @@ module ActiveRecord
       )
 
       # Maps logical Rails types to MySQL-specific data types.
-      def type_to_sql_with_unsigned(type, limit = nil, precision = nil, scale = nil, unsigned = false)
+      def type_to_sql(type, limit = nil, precision = nil, scale = nil, unsigned = false)
         # return earlier, only need overwrite method when unsigned option == true
-        return type_to_sql_without_unsigned(type, limit, precision, scale) unless unsigned
+        return super unless unsigned
 
 
         case type.to_s
@@ -89,10 +89,9 @@ module ActiveRecord
           else raise(ActiveRecordError, "No integer type has byte size #{limit}")
           end
         else
-          type_to_sql_without_unsigned(type, limit, precision, scale)
+          super
         end
       end
-      alias_method_chain :type_to_sql, :unsigned
 
     end
   end
