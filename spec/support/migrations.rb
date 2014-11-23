@@ -17,7 +17,7 @@ ActiveRecord::Migration.verbose = true
 # create goods table
 class CreateGoodsTable < ActiveRecord::Migration
   def self.change
-    create_table :goods, force: true do |t|
+    create_table :goods, force: true, limit: 8 do |t|
       t.string  :name, null: false
       t.boolean :deleted, default: false
     end
