@@ -11,27 +11,13 @@ module ActiveRecord
     end
 
     class TableDefinition
-
+      alias_method :column_without_unsigned, :column
       def column(name, type, options = {})
-        name = name.to_s
-        type = type.to_sym
-
-        column = self[name] || new_column_definition(@base, name, type)
-
-        limit = options.fetch(:limit) do
-          native[type][:limit] if native[type].is_a?(Hash)
-        end
-
-        column.limit          = limit
-        column.unsigned       = options[:unsigned]
-        column.auto_increment = options[:auto_increment]
-        column.precision      = options[:precision]
-        column.scale          = options[:scale]
-        column.default        = options[:default]
-        column.null           = options[:null]
+        column_without_unsigned(name, type, options)
+        column = self[name]
+        column.unsigned = options[:unsigned]
         self
       end
-
     end
   end
 end
