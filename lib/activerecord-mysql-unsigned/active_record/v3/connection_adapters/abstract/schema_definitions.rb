@@ -3,24 +3,10 @@ require 'active_record/connection_adapters/abstract/schema_definitions'
 module ActiveRecord
   module ConnectionAdapters
     class ColumnDefinition
-      def unsigned=(value)
-        @unsigned = value
-      end
-
-      def unsigned
-        @unsigned
-      end
-
-      def auto_increment=(value)
-        @auto_increment = value
-      end
-
-      def auto_increment
-        @auto_increment
-      end
+      attr_accessor :unsigned, :first, :after
 
       def sql_type
-        base.type_to_sql(type.to_sym, limit, precision, scale, unsigned, auto_increment) rescue type
+        base.type_to_sql(type.to_sym, limit, precision, scale, unsigned) rescue type
       end
     end
 
