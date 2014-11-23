@@ -57,6 +57,16 @@ module ActiveRecord
         end
       end
 
+      def prepare_column_options(column, types) # :nodoc:
+        spec = super
+        spec[:unsigned] = 'true' if column.unsigned?
+        spec
+      end
+
+      def migration_keys
+        super + [:unsigned]
+      end
+
       NATIVE_DATABASE_TYPES.merge!(
         :primary_key => "int(10) unsigned DEFAULT NULL auto_increment PRIMARY KEY"
       )
