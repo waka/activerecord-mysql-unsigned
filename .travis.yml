@@ -7,3 +7,4 @@ env:
   - "AR_VERSION=3.2.21"
   - "AR_VERSION=4.0.12"
   - "AR_VERSION=4.1.8"
+  - "AR_VERSION=4.2.0.beta4"
