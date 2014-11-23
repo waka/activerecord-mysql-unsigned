@@ -11,6 +11,10 @@ module ActiveRecord
     end
 
     class TableDefinition
+      def primary_key(name, type = :primary_key, options = {})
+        column(name, type, options.merge(primary_key: true).reverse_merge(unsigned: true))
+      end
+
       alias_method :column_without_unsigned, :column
       def column(name, type, options = {})
         column_without_unsigned(name, type, options)

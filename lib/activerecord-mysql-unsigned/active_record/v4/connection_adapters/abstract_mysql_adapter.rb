@@ -67,10 +67,6 @@ module ActiveRecord
         super + [:unsigned]
       end
 
-      NATIVE_DATABASE_TYPES.merge!(
-        :primary_key => "int(10) unsigned DEFAULT NULL auto_increment PRIMARY KEY"
-      )
-
       alias_method :type_to_sql_without_unsigned, :type_to_sql
       def type_to_sql(type, limit = nil, precision = nil, scale = nil, unsigned = false)
         case type.to_s
@@ -86,6 +82,8 @@ module ActiveRecord
           type_to_sql_without_unsigned(type, limit, precision, scale).tap do |sql_type|
             sql_type << ' unsigned' if unsigned
           end
+        when 'primary_key'
+          "#{type_to_sql(:integer, limit, precision, scale, unsigned)} auto_increment PRIMARY KEY"
         else
           type_to_sql_without_unsigned(type, limit, precision, scale)
         end
