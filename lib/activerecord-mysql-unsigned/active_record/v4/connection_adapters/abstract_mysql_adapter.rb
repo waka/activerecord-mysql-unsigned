@@ -4,6 +4,53 @@ module ActiveRecord
   module ConnectionAdapters
     class AbstractMysqlAdapter < AbstractAdapter
  
+      class ChangeColumnDefinition < Struct.new(:column, :type, :options) #:nodoc:
+      end
+
+      class SchemaCreation < AbstractAdapter::SchemaCreation
+        def visit_AddColumn(o)
+          sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
+          sql = "ADD #{quote_column_name(o.name)} #{sql_type}"
+          add_column_options!(sql, column_options(o)) unless o.type.to_sym == :primary_key
+          add_column_position!(sql, column_options(o))
+        end
+
+        def visit_ChangeColumnDefinition(o)
+          column = o.column
+          options = o.options
+          sql_type = type_to_sql(o.type, options[:limit], options[:precision], options[:scale], options[:unsigned])
+          change_column_sql = "CHANGE #{quote_column_name(column.name)} #{quote_column_name(options[:name])} #{sql_type}"
+          add_column_options!(change_column_sql, options.merge(column: column)) unless o.type.to_sym == :primary_key
+          add_column_position!(change_column_sql, options)
+        end
+
+        def visit_ColumnDefinition(o)
+          sql_type = type_to_sql(o.type.to_sym, o.limit, o.precision, o.scale, o.unsigned)
+          column_sql = "#{quote_column_name(o.name)} #{sql_type}"
+          add_column_options!(column_sql, column_options(o)) unless o.type.to_sym == :primary_key
+          column_sql
+        end
+
+        def column_options(o)
+          column_options = super
+          column_options[:first] = o.first
+          column_options[:after] = o.after
+          column_options
+        end
+
+        def add_column_position!(sql, options)
+          if options[:first]
+            sql << " FIRST"
+          elsif options[:after]
+            sql << " AFTER #{quote_column_name(options[:after])}"
+          end
+        end
+
+        def type_to_sql(type, limit, precision, scale, unsigned = false)
+          @conn.type_to_sql type.to_sym, limit, precision, scale, unsigned
+        end
+      end
+
       class Column < ConnectionAdapters::Column # :nodoc:
         def unsigned?
           sql_type =~ /unsigned/i
@@ -65,28 +112,24 @@ module ActiveRecord
       end
 
       def add_column_sql(table_name, column_name, type, options = {})
-        add_column_sql = "ADD #{quote_column_name(column_name)} #{type_to_sql(type, options[:limit], options[:precision], options[:scale], options[:unsigned])}"
-        add_column_options!(add_column_sql, options)
-        add_column_position!(add_column_sql, options)
-        add_column_sql
+        td = create_table_definition table_name, options[:temporary], options[:options]
+        cd = td.new_column_definition(column_name, type, options)
+        schema_creation.visit_AddColumn cd
       end
 
       def change_column_sql(table_name, column_name, type, options = {})
         column = column_for(table_name, column_name)
 
-        unless type.to_sym == :primary_key
-          unless options_include_default?(options)
-            options[:default] = column.default
-          end
-          unless options.has_key?(:null)
-            options[:null] = column.null
-          end
+        unless options_include_default?(options)
+          options[:default] = column.default
         end
 
-        change_column_sql = "CHANGE #{quote_column_name(column_name)} #{quote_column_name(column_name)} #{type_to_sql(type, options[:limit], options[:precision], options[:scale], options[:unsigned])}"
-        add_column_options!(change_column_sql, options)
-        add_column_position!(change_column_sql, options)
-        change_column_sql
+        unless options.has_key?(:null)
+          options[:null] = column.null
+        end
+
+        options[:name] = column.name
+        schema_creation.visit_ChangeColumnDefinition ChangeColumnDefinition.new column, type, options
       end
 
     end
