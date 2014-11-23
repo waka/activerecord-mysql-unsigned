@@ -52,6 +52,16 @@ describe "INT/Decimal column" do
     expect(unsigned_int_col.unsigned?).to be_truthy
   end
 
+  it "signed column has 'unsigned' attribute after changed" do
+    will_unsigned_int_col = User.columns[4]
+    expect(will_unsigned_int_col.unsigned?).to be_truthy
+  end
+
+  it "unsigned column has 'signed' attribute after changed" do
+    will_signed_int_col = User.columns[5]
+    expect(will_signed_int_col.unsigned?).to be_falsey
+  end
+
   it "allowed minus value of signed decimal" do
     @user.signed_decimal = -10.0
     @user.save
