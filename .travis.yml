@@ -3,8 +3,9 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1
+  - 2.2
 env:
   - "AR_VERSION=3.2.21"
-  - "AR_VERSION=4.0.12"
-  - "AR_VERSION=4.1.8"
-  - "AR_VERSION=4.2.0.beta4"
+  - "AR_VERSION=4.0.13"
+  - "AR_VERSION=4.1.9"
+  - "AR_VERSION=4.2.0"
