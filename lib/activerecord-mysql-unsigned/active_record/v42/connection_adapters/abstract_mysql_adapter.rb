@@ -4,7 +4,7 @@ module ActiveRecord
   module ConnectionAdapters
     class AbstractMysqlAdapter < AbstractAdapter
  
-      class ChangeColumnDefinition < Struct.new(:column, :type, :options) #:nodoc:
+      class ChangeColumnDefinition < Struct.new(:column, :name) #:nodoc:
       end
 
       class SchemaCreation < AbstractAdapter::SchemaCreation
@@ -17,12 +17,11 @@ module ActiveRecord
           add_column_sql
         end
 
-        def visit_ChangeColumnDefinition(o)
+        def visit_ChangeColumnDefinition(o, options={})
           column = o.column
-          options = o.options
-          sql_type = type_to_sql(o.type, options[:limit], options[:precision], options[:scale], options[:unsigned])
+          sql_type = type_to_sql(o.name, options[:limit], options[:precision], options[:scale], options[:unsigned])
           change_column_sql = "CHANGE #{quote_column_name(column.name)} #{quote_column_name(options[:name])} #{sql_type}"
-          add_column_options!(change_column_sql, options.merge(column: column)) unless o.type.to_sym == :primary_key
+          add_column_options!(change_column_sql, options.merge(column: column)) unless o.name.to_sym == :primary_key
           add_column_position!(change_column_sql, options)
 
           change_column_sql
@@ -112,7 +111,7 @@ module ActiveRecord
         end
 
         options[:name] = column.name
-        schema_creation.visit_ChangeColumnDefinition ChangeColumnDefinition.new column, type, options
+        schema_creation.visit_ChangeColumnDefinition ChangeColumnDefinition.new(column, type), options
       end
 
     end
