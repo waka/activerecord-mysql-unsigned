@@ -83,7 +83,7 @@ module ActiveRecord
           end.tap do |sql_type|
             sql_type << ' unsigned' if unsigned
           end
-        when 'float', 'decimal'
+        when 'float', 'decimal', 'bigint'
           type_to_sql_without_unsigned(type, limit, precision, scale).tap do |sql_type|
             sql_type << ' unsigned' if unsigned
           end
