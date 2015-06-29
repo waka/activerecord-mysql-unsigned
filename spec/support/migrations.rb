@@ -38,6 +38,7 @@ class CreateUsersTable < ActiveRecord::Migration
       t.integer :will_bigint
       t.decimal :signed_decimal, null: false, default: 0, precision: 15, scale: 2
       t.decimal :unsigned_decimal, null: false, default: 0, unsigned: true, precision: 15, scale: 2
+      t.integer :will_unsigned_bigint
     end
   end
 end
@@ -55,6 +56,7 @@ class ChangeColumnToUsersTable < ActiveRecord::Migration
     change_column :users, :will_unsigned_int, :integer, unsigned: true
     change_column :users, :will_signed_int,   :integer, unsigned: false
     change_column :users, :will_bigint,       :integer, limit: 8
+    change_column :users, :will_unsigned_bigint, :integer, limit: 8, unsigned: true
   end
 end
 
