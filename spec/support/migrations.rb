@@ -56,7 +56,7 @@ class ChangeColumnToUsersTable < ActiveRecord::Migration
     change_column :users, :will_unsigned_int, :integer, unsigned: true
     change_column :users, :will_signed_int,   :integer, unsigned: false
     change_column :users, :will_bigint,       :integer, limit: 8
-    change_column :users, :will_unsigned_bigint, :integer, limit: 8, unsigned: true
+    change_column :users, :will_unsigned_bigint, :bigint, unsigned: true
   end
 end
 
